@@ -17,12 +17,6 @@ struct PontoXY {
         angulo = 0;
         escala = 1;
     }
-    void setPonto(GLfloat x1, GLfloat y1) {
-        x = x1;
-        y = y1;
-        angulo = 0;
-        escala = 1;
-    }
 };
 PontoXY vetorDePontos[5];
 int pontoMovel = 1;
@@ -165,43 +159,6 @@ void keyboardFunc(unsigned char key, int x, int y) {
 
     glutPostRedisplay();
 }
-// void basic(float x, float y, float angulo, float escala) {
-//     glPushMatrix();
-//     glTranslatef(x, y, 0.0f);
-//     glRotatef(angulo, 0.0f, 0.0f, 1.0);
-//     glScalef(escala, escala, 0.0f);
-//     glBegin(GL_LINE_LOOP);
-//     glColor3f(1.0f, 1.0f, 1.0f);
-//     glVertex2f(0 - 0.1f, 0 + 0.1f);
-//     glVertex2f(0 + 0.1f, 0 + 0.1f);
-//     glVertex2f(0 + 0.1f, 0 - 0.1f);
-//     glVertex2f(0 - 0.1f, 0 - 0.1f);
-//     glEnd();
-//     glPopMatrix();
-// }
-// void basic2(float x, float y, float angulo, float escala) {
-//     glPushMatrix();
-//     glTranslatef(x, y, 0.0f);
-//     glRotatef(angulo, 0.0f, 0.0f, 1.0);
-//     glScalef(escala, escala, 0.0f);
-
-//     glBegin(GL_LINE_LOOP);
-//     glColor3f(0.0f, 1.0f, 1.0f);
-//     glVertex2f(0 - 0.1f, 0 + 0.1f);
-//     glVertex2f(0 + 0.5f, 0 + 0.5f);
-//     glVertex2f(0 + 0.5f, 0 - 0.5f);
-//     glVertex2f(0 - 0.1f, 0 - 0.1f);
-//     glEnd();
-
-//     glBegin(GL_LINE_LOOP);
-//     glVertex2f(0 - 0.2f, 0 + 0.2f);
-//     glVertex2f(0 + 0.2f, 0 + 0.2f);
-//     glVertex2f(0 + 0.2f, 0 - 0.2f);
-//     glVertex2f(0 - 0.2f, 0 - 0.2f);
-//     glEnd();
-//     glPopMatrix();
-// }
-
 void renderScene() {
     // Limpa a janela com a cor especificada como cor de fundo
     glClear(GL_COLOR_BUFFER_BIT);
@@ -221,13 +178,6 @@ void renderScene() {
     // para conclusao da geracao da imagem
     glFlush();
 }
-
-// Inicializa aspectos do rendering
-// void setupRC() {
-//     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);  // cor de fundo da janela
-//     glMatrixMode(GL_PROJECTION);
-//     glLoadIdentity();
-// }
 // Parte principal - ponto de inicio de execucao
 // Cria janela
 // Inicializa aspectos relacionados a janela e a geracao da imagem
@@ -253,9 +203,6 @@ int main(int argc, char* argv[]) {
 
     // Especifica para a OpenGL que funcao deve ser chamada para geracao da imagem
     glutDisplayFunc(renderScene);
-
-    // Executa a inicializacao de parametros de exibicao
-    // setupRC();
 
     // Escrever informacoes sobre a versao de OpenGL em uso porque pode ser util saber.
     std::cout << "Usando OpenGL '" << glGetString(GL_VERSION) << "' implementado por '"
