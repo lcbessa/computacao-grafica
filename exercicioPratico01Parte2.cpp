@@ -3,7 +3,7 @@
 #include <cmath>
 #include <cstdlib>  // para usar a funcao exit
 #include <iostream>
-#define PI 3.14159265359
+#define PI 3.14159265359;
 
 struct PontoXY {
     GLfloat x;
@@ -17,9 +17,21 @@ struct PontoXY {
         angulo = 0;
         escala = 1;
     }
+    void setPonto(GLfloat x1, GLfloat y1) {
+        x = x1;
+        y = y1;
+        angulo = 0;
+        escala = 1;
+    }
 };
 PontoXY vetorDePontos[5];
 int pontoMovel = 1;
+void posicaoOriginalObjeto() {
+    vetorDePontos[1].setPonto(0.551, 0.450);
+    vetorDePontos[2].setPonto(-0.745, 0.400);
+    vetorDePontos[3].setPonto(0.830, 0.056);
+    vetorDePontos[4].setPonto(0.406, -0.853);
+}
 
 void quadrilatero(float x, float y, float tamanho, float larguraX, float larguraY) {
     glBegin(GL_LINE_LOOP);
@@ -50,8 +62,8 @@ void cama(PontoXY ponto) {
     glTranslatef(ponto.x, ponto.y, 0.0f);
     glRotatef(ponto.angulo, 0.0f, 0.0f, 1.0);
     glScalef(ponto.escala, ponto.escala, 0.0f);
-    quadrilatero(0.551, 0.450, 0.2, 1.85, 0.995);
-    quadrilatero(0.814, 0.450, 0.2, 0.300, 0.8);
+    quadrilatero(0, 0, 0.2, 1.85, 0.995);
+    quadrilatero(0.250, 0, 0.2, 0.300, 0.8);
     glPopMatrix();
 }
 void mesa(PontoXY ponto) {
@@ -59,7 +71,7 @@ void mesa(PontoXY ponto) {
     glTranslatef(ponto.x, ponto.y, 0.0f);
     glRotatef(ponto.angulo, 0.0f, 0.0f, 1.0);
     glScalef(ponto.escala, ponto.escala, 0.0f);
-    quadrilatero(-0.745, 0.400, 0.2, 1, 2.2);
+    quadrilatero(0, 0, 0.2, 1, 2.2);
     glPopMatrix();
 }
 void criadoMudo(PontoXY ponto) {
@@ -67,7 +79,7 @@ void criadoMudo(PontoXY ponto) {
     glTranslatef(ponto.x, ponto.y, 0.0f);
     glRotatef(ponto.angulo, 0.0f, 0.0f, 1.0);
     glScalef(ponto.escala, ponto.escala, 0.0f);
-    quadrilatero(0.830, 0.056, 0.2, 0.5, 0.5);
+    quadrilatero(0, 0, 0.2, 0.5, 0.5);
     glPopMatrix();
 }
 void guardaRoupas(PontoXY ponto) {
@@ -75,7 +87,7 @@ void guardaRoupas(PontoXY ponto) {
     glTranslatef(ponto.x, ponto.y, 0.0f);
     glRotatef(ponto.angulo, 0.0f, 0.0f, 1.0f);
     glScalef(ponto.escala, ponto.escala, 0.0f);
-    quadrilatero(0.406, -0.853, 0.2, 2, 0.4);
+    quadrilatero(0, 0, 0.2, 2, 0.4);
     glPopMatrix();
 }
 void opcoesMouse(int botao, int estado, int x, int y) {
@@ -207,6 +219,8 @@ int main(int argc, char* argv[]) {
     // Escrever informacoes sobre a versao de OpenGL em uso porque pode ser util saber.
     std::cout << "Usando OpenGL '" << glGetString(GL_VERSION) << "' implementado por '"
               << glGetString(GL_VENDOR) << "' em arquitetura '" << glGetString(GL_RENDERER) << std::endl;
+
+    posicaoOriginalObjeto();
 
     // Entra no loop de tratamento de eventos da GLUT
     glutMainLoop();
