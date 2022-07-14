@@ -86,6 +86,17 @@ void ChangeSize(GLsizei width, GLsizei height) {
         glOrtho(-0.7, 0.7, -0.7, 0.7, 1.0, 10.0);
     }
 }
+void mostrarMenu() {
+    using std::cout;
+    cout << "\nDurante a execucao, voce pode usar as seguintes teclas:\n"
+         << " a Mover para direita\n"
+         << " d Mover para esquerda\n"
+         << " w Mover para cima\n"
+         << " s Mover para baixo\n"
+         << " z  ZBuffer\n"
+         << " b  BackFaceCulling\n"
+         << " ESC: Para sair do programa\n\n";
+}
 
 void keyboardFunc(unsigned char key, int x, int y) {
     switch (key) {
@@ -111,11 +122,15 @@ void keyboardFunc(unsigned char key, int x, int y) {
         case 'b':
             backFace *= -1;
             break;
+        case 27:
+            exit(0);
+            break;
     }
     glutPostRedisplay();
 }
 int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
+    mostrarMenu();
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(100, 100);
@@ -126,7 +141,7 @@ int main(int argc, char* argv[]) {
     // Escrever informacoes sobre a versao de OpenGL em uso porque pode ser util saber.
     std::cout << "Usando OpenGL '" << glGetString(GL_VERSION) << "' implementado por '"
               << glGetString(GL_VENDOR) << "' em arquitetura '" << glGetString(GL_RENDERER)
-              << "'.\nExtensoes disponiveis: " << glGetString(GL_EXTENSIONS) << std::endl;
+              << std::endl;
 
     glutMainLoop();
     return 0;
