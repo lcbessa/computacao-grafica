@@ -1,139 +1,115 @@
-
 #include <GL/glut.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <iostream>
+static int leftFirst = GL_TRUE;
 
-#define MAXZ 8.0
-#define MINZ -8.0
-#define ZINC 0.4
+float color1 = 0.75;
+float color2 = 0.75;
+float color3 = 0.75;
 
-static float solidZ = MAXZ;
-static float transparentZ = MINZ;
-static GLuint sphereList, coneList, cubeList;
-
+/*  Initialize alpha blending function.
+ */
 static void init(void) {
-    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 0.15};
-    GLfloat mat_shininess[] = {100.0};
-    GLfloat position[] = {0.5, 0.5, 1.0, 0.0};
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glShadeModel(GL_FLAT);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+}
 
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
+static void drawLeftTriangle(void) {
+    /* draw yellow triangle on LHS of screen */
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
+    glBegin(GL_TRIANGLES);
+    glColor4f(1, 0, 0.0, color1);
+    glVertex3f(0.1, 0.9, 0.0);
+    glVertex3f(0.1, 0.1, 0.0);
+    glVertex3f(0.7, 0.5, 0.0);
+    glEnd();
+}
 
-    sphereList = glGenLists(1);
-    glNewList(sphereList, GL_COMPILE);
-    glutSolidSphere(0.4, 16, 16);
-    glEndList();
+static void drawRightTriangle(void) {
+    /* draw cyan triangle on RHS of screen */
 
-    cubeList = glGenLists(1);
-    glNewList(cubeList, GL_COMPILE);
-    glutSolidCube(0.6);
-    glEndList();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.0, 0.0, 1.0, color2);
+    glVertex3f(0.9, 0.9, 0.0);
+    glVertex3f(0.3, 0.5, 0.0);
+    glVertex3f(0.9, 0.1, 0.0);
+    glEnd();
+}
+static void drawDownTriangle(void) {
+    /* draw yellow triangle on LHS of screen */
 
-    coneList = glGenLists(1);
-    glNewList(coneList, GL_COMPILE);
-    glutSolidCone(0.6, 2, 2, 2);
-    glEndList();
+    glBegin(GL_TRIANGLES);
+    glColor4f(0.0, 1, 0.0, color3);
+    glVertex3f(0.1, 0.1, 0.0);
+    glVertex3f(0.5, 0.5, 0.0);
+    glVertex3f(0.9, 0.1, 0.0);
+    glEnd();
 }
 
 void display(void) {
-    GLfloat mat_solid[] = {0.75, 0.75, 0.0, 1.0};
-    GLfloat mat_zero[] = {0.0, 0.0, 0.0, 1.0};
-    GLfloat mat_transparent[] = {0.0, 0.8, 0.8, 0.6};
-    GLfloat mat_emission[] = {0.0, 0.3, 0.3, 0.6};
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (leftFirst) {
+        drawLeftTriangle();
+        drawRightTriangle();
+    } else {
+        drawRightTriangle();
+        drawLeftTriangle();
+    }
+    drawDownTriangle();
 
-    glPushMatrix();
-    glTranslatef(-0.15, -0.15, solidZ);
-    glMaterialfv(GL_FRONT, GL_EMISSION, mat_zero);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_solid);
-    glCallList(sphereList);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0.15, 0.15, transparentZ);
-    glRotatef(15.0, 1.0, 1.0, 0.0);
-    glRotatef(30.0, 0.0, 1.0, 0.0);
-    glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_transparent);
-    glEnable(GL_BLEND);
-    glDepthMask(GL_FALSE);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glCallList(cubeList);
-    glDepthMask(GL_TRUE);
-    glDisable(GL_BLEND);
-    glPopMatrix();
-
-    glPushMatrix();
-    glTranslatef(0.15, 0.15, transparentZ);
-    glRotatef(15.0, 1.0, 1.0, -1.0);
-    glRotatef(30.0, 0.0, 1.0, 0.0);
-    glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_transparent);
-    glEnable(GL_BLEND);
-    glDepthMask(GL_FALSE);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    glCallList(coneList);
-    glDepthMask(GL_TRUE);
-    glDisable(GL_BLEND);
-    glPopMatrix();
-
-    glutSwapBuffers();
+    glFlush();
 }
 
 void reshape(int w, int h) {
-    glViewport(0, 0, (GLint)w, (GLint)h);
+    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (w <= h)
-        glOrtho(-1.5, 1.5, -1.5 * (GLfloat)h / (GLfloat)w,
-                1.5 * (GLfloat)h / (GLfloat)w, -10.0, 10.0);
+        gluOrtho2D(0.0, 1.0, 0.0, 1.0 * (GLfloat)h / (GLfloat)w);
     else
-        glOrtho(-1.5 * (GLfloat)w / (GLfloat)h,
-                1.5 * (GLfloat)w / (GLfloat)h, -1.5, 1.5, -10.0, 10.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-
-void animate(void) {
-    if (solidZ <= MINZ || transparentZ >= MAXZ)
-        glutIdleFunc(NULL);
-    else {
-        solidZ -= ZINC;
-        transparentZ += ZINC;
-        glutPostRedisplay();
-    }
+        gluOrtho2D(0.0, 1.0 * (GLfloat)w / (GLfloat)h, 0.0, 1.0);
 }
 
 void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-        case 'a':
-        case 'A':
-            solidZ = MAXZ;
-            transparentZ = MINZ;
-            glutIdleFunc(animate);
+        case 't':
+        case 'T':
+            leftFirst = !leftFirst;
+            glutPostRedisplay();
             break;
-        case 'r':
-        case 'R':
-            solidZ = MAXZ;
-            transparentZ = MINZ;
+        case 'a':
+            color1 += 0.4;
+            glutPostRedisplay();
+            break;
+        case 's':
+            color1 -= 0.4;
+            glutPostRedisplay();
+            break;
+        case 'd':
+            color2 += 0.4;
             glutPostRedisplay();
             break;
         case 'f':
-        case 'F':
-            solidZ = MAXZ;
-            transparentZ = MINZ;
+            color2 -= 0.4;
             glutPostRedisplay();
             break;
-        case 27:
+        case 'g':
+            color3 += 0.4;
+            glutPostRedisplay();
+            break;
+        case 'h':
+            color3 -= 0.4;
+            glutPostRedisplay();
+            break;
+        case 27: /*  Escape key  */
             exit(0);
+            break;
+        default:
+            break;
     }
 }
 
